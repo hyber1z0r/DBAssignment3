@@ -115,7 +115,15 @@ public class Schema {
    public int length(String fldname) {
       return info.get(fldname).length;
    }
-   
+
+   public void addFloatField(String fldname) {
+      addField(fldname, FLOAT, 0);
+   }
+
+   public void addBooleanField(String fldname) {
+      addField(fldname, BOOLEAN, 0);
+   }
+
    class FieldInfo {
       int type, length;
       public FieldInfo(int type, int length) {

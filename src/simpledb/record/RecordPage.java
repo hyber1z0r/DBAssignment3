@@ -159,4 +159,24 @@ public class RecordPage {
       }
       return false;
    }
+
+    public float getFloat(String fldname) {
+        int position = fieldpos(fldname);
+        return tx.getFloat(blk, position);
+    }
+
+    public void setFloat(String fldname, Float val) {
+        int position = fieldpos(fldname);
+        tx.setFloat(blk, position, val);
+    }
+
+    public boolean getBoolean(String fldname) {
+        int position = fieldpos(fldname);
+        return tx.getBoolean(blk, position);
+    }
+
+    public void setBoolean(String fldname, Boolean val) {
+        int position = fieldpos(fldname);
+        tx.setBoolean(blk, position, val);
+    }
 }

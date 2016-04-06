@@ -134,4 +134,22 @@ public class RecoveryMgr {
    private boolean isTempBlock(Block blk) {
       return blk.fileName().startsWith("temp");
    }
+
+   public int setBoolean(Buffer buff, int offset, Boolean newval) {
+      Boolean oldval = buff.getBoolean(offset);
+      Block blk = buff.block();
+      if (isTempBlock(blk))
+         return -1;
+      else
+         return new SetBoolRecord(txnum, blk, offset, oldval).writeToLog();
+   }
+
+   public int setFloat(Buffer buff, int offset, Float newval) {
+      Float oldval = buff.getFloat(offset);
+      Block blk = buff.block();
+      if (isTempBlock(blk))
+         return -1;
+      else
+         return new SetFloatRecord(txnum, blk, offset, oldval).writeToLog();
+   }
 }

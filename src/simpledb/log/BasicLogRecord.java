@@ -51,4 +51,16 @@ public class BasicLogRecord {
       pos += STR_SIZE(result.length());
       return result;
    }
+
+   public boolean nextBoolean() {
+      boolean result = pg.getBoolean(pos);
+      pos += INT_SIZE;
+      return result;
+   }
+
+   public Float nextFloat() {
+      Float result = pg.getFloat(pos);
+      pos += FLOAT_SIZE;
+      return result;
+   }
 }
