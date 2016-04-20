@@ -114,9 +114,7 @@ public class NoDupsSortScan implements Scan {
      * @see simpledb.query.Scan#hasField(java.lang.String)
      */
     public boolean hasField(String fldname) {
-        if (groupfields.contains(fldname))
-            return true;
-        return false;
+        return groupfields.contains(fldname);
     }
 }
 

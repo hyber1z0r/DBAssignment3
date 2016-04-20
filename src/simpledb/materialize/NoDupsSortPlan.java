@@ -41,7 +41,7 @@ public class NoDupsSortPlan implements Plan {
     /**
      * This method opens a sort plan for the specified plan.
      * The sort plan ensures that the underlying records
-     * will be appropriately grouped.
+     * will be appropriately distincted.
      * @see simpledb.query.Plan#open()
      */
     public Scan open() {

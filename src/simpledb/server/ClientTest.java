@@ -4,7 +4,10 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import simpledb.materialize.NoDupsSortPlan;
 import simpledb.metadata.TableMgr;
+import simpledb.parse.QueryData;
+import simpledb.planner.BasicQueryPlanner;
 import simpledb.query.*;
 import simpledb.record.RecordFile;
 import simpledb.record.Schema;
@@ -12,6 +15,9 @@ import simpledb.record.TableInfo;
 import simpledb.tx.Transaction;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * Created by jakobgaardandersen on 20/04/2016.
@@ -41,7 +47,7 @@ public class ClientTest {
         file.setFloat("salary", 10.99f);
         file.insert();
         file.setString("name", "John");
-        file.setInt("age", 23);
+        file.setInt("age", 25);
         file.setFloat("salary", 20.99f);
         file.insert();
         file.setString("name", "Ellen");
@@ -66,7 +72,7 @@ public class ClientTest {
     public void testGetData() {
         Plan queryPlan = SimpleDB.planner().createQueryPlan("SELECT name, age, salary FROM mytable", tx);
         int count = queryPlan.recordsOutput();
-        System.out.println(count);
+        System.out.println("Tuples: " + count);
         Scan open = queryPlan.open();
 
         for (int i = 0; i < count; i++) {
@@ -75,6 +81,31 @@ public class ClientTest {
             IntConstant age = (IntConstant) open.getVal("age");
             FloatConstant salary = (FloatConstant) open.getVal("salary");
             System.out.println(name + ", " + age + " years, " + salary + "$ USD/hr");
+        }
+    }
+
+    @Test
+    public void testNoDuplicates() {
+        Collection<String> distinctFields = new ArrayList<>();
+        distinctFields.add("age");
+
+        Collection<String> tables = new ArrayList<>();
+        tables.add("mytable");
+
+        QueryData data = new QueryData(distinctFields, tables, new Predicate());
+        Plan plan = new BasicQueryPlanner().createPlan(data, tx);
+        Plan queryPlan = new NoDupsSortPlan(plan, distinctFields, tx);
+
+        int count = queryPlan.recordsOutput();
+        System.out.println("Unique tuples distincted by age: " + count);
+
+        Scan open = queryPlan.open();
+
+        System.out.println("The distinct ages:");
+        for (int i = 0; i < count; i++) {
+            open.next();
+            IntConstant age = (IntConstant) open.getVal("age");
+            System.out.println(age);
         }
     }
 }
