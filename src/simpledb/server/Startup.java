@@ -1,13 +1,10 @@
 package simpledb.server;
 
-import simpledb.metadata.TableMgr;
-import simpledb.record.RecordFile;
-import simpledb.record.Schema;
-import simpledb.record.TableInfo;
-import simpledb.remote.*;
-import simpledb.tx.Transaction;
+import simpledb.remote.RemoteDriver;
+import simpledb.remote.RemoteDriverImpl;
 
-import java.rmi.registry.*;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 public class Startup {
 
@@ -25,31 +22,5 @@ public class Startup {
         reg.rebind("simpledb", d);
 
         System.out.println("database server ready");
-
-        Transaction tx = new Transaction();
-        Schema schema = new Schema();
-        schema.addStringField("name", TableMgr.MAX_NAME);
-        schema.addIntField("age");
-        schema.addFloatField("salary");
-        schema.addBooleanField("single");
-        SimpleDB.mdMgr().createTable(tableName, schema, tx);
-        TableInfo tableInfo = SimpleDB.mdMgr().getTableInfo(tableName, tx);
-        RecordFile file = new RecordFile(tableInfo, tx);
-        file.insert();
-        file.setString("name", "Peter");
-        file.setInt("age", 23);
-        file.setFloat("salary", 10.99f);
-        file.setBoolean("single", true);
-        file.insert();
-        file.setString("name", "John");
-        file.setInt("age", 23);
-        file.setFloat("salary", 7.99f);
-        file.setBoolean("single", true);
-        file.insert();
-        file.setString("name", "Ellen");
-        file.setInt("age", 25);
-        file.setFloat("salary", 15f);
-        file.setBoolean("single", false);
-        tx.commit();
     }
 }
